@@ -1,13 +1,21 @@
 import express from "express";
 import morgan from "morgan";
-
+import connectToDatabase from "./config/db.js";
 import userRouter from "./routes/userRouter.js";
+import postRouter from "./routes/postRouter.js";
+
+try {
+  await connectToDatabase();
+} catch (error) {
+  console.error("Failed to connect to MongoDB:", error);
+  process.exit(1);
+}
 
 const app = express();
-
 app.use(morgan("dev"));
 app.use(express.json());
-app.use("/user", userRouter);
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/post", postRouter);
 
 const port = 3000;
 app.listen(port, () => {
