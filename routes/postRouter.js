@@ -6,12 +6,13 @@ import {
   deletePostById,
   updatePostById,
 } from "../controllers/postController.js";
+import { protect } from "../middleware/auth.js";
 
 const router = express.Router();
 
 router.get("/", getAllPosts);
 router.get("/:id", getPostById);
-router.post("/", addPost);
+router.post("/", protect, addPost);
 router.delete("/:id", deletePostById);
 router.put("/:id", updatePostById);
 

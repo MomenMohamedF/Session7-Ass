@@ -9,7 +9,7 @@ dotenv.config();
 
 async function createPosts() {
   const uri = process.env.MONGODB_URL?.trim().replace(/;$/, "");
-  
+
   if (!uri) {
     console.error("❌ MONGODB_URL environment variable is missing");
     process.exit(1);

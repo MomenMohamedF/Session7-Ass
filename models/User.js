@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema(
     role: { type: String, default: "user" },
     password: { type: String, required: true },
     dateOfBirth: { type: Date, required: true },
+    logoutTime: { type: Date, default: null },
   },
   { timestamps: true },
 );

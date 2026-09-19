@@ -34,19 +34,22 @@ const getAllPosts = async (req, res) => {
 };
 
 const addPost = async (req, res) => {
-  const { text, imageUrl, userId } = req.body;
+  const { text, imageUrl } = req.body;
 
-  if (!text || !userId) {
-    return res.status(400).json({ error: "text and userId are required" });
+  console.log("req.user", req.user);
+
+  const userId = req.user?.userId;
+
+  if (!text) return res.status(400).json({ error: "text is required" });
+  if (!userId) {
+    return res
+      .status(401)
+      .json({ error: "Valid authentication token is required" });
   }
 
   if (!isValidObjectId(userId)) {
     return res.status(400).json({ error: "Invalid userId" });
   }
-
-  // Optional: ensure user exists
-  const userExists = await User.findById(userId).select("_id");
-  if (!userExists) return res.status(404).json({ error: "User not found" });
 
   const postData = { text, userId };
   if (imageUrl) {
@@ -54,6 +57,9 @@ const addPost = async (req, res) => {
   }
 
   try {
+    const userExists = await User.findById(userId).select("_id");
+    if (!userExists) return res.status(404).json({ error: "User not found" });
+
     const post = await Post.create(postData);
     res.status(201).json(post);
   } catch (error) {
